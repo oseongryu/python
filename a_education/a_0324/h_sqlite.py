@@ -4,16 +4,16 @@ conn = sqlite3.connect("test.db")
 
 cur = conn.cursor()
 
-cur.execute\
-("""
-CREATE TABLE stocks
-(   date text
-, trans text
-, symbol text
-, qty real
-, price real
-)
-""")
+# cur.execute\
+# ("""
+# CREATE TABLE stocks
+# (   date text
+# , trans text
+# , symbol text
+# , qty real
+# , price real
+# )
+# """)
 
 cur.execute\
 ("""
@@ -24,7 +24,7 @@ VALUES
 , 'BUY'
 , 'RHAT'
 , 200
-, 15035
+, 15037
 )
 """)
 conn.commit();

@@ -5,6 +5,9 @@ from pywinauto import timings
 import time
 import os
 
+
+# http://blog.naver.com/PostView.nhn?blogId=sfairan&logNo=220784921385&parentCategoryNo=&categoryNo=10&viewDate=&isShowPopularPosts=false&from=postView
+
 app = application.Application()
 app.start("C:\\KiwoomFlash3\\Bin\\NKMiniStarter.exe")
 
@@ -17,7 +20,7 @@ pass_ctrl.TypeKeys('xxxx')
 
 cert_ctrl = dlg.Edit3
 cert_ctrl.SetFocus()
-cert_ctrl.TypeKeys('yyyy')
+cert_ctrl.TypeKeys('yyyy!')
 
 btn_ctrl = dlg.Button0
 btn_ctrl.Click()
