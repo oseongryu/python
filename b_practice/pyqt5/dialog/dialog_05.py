@@ -6,23 +6,23 @@ from PyQt5.QtWidgets import QApplication, QDialog
 from PyQt5.uic import loadUi
 from PyQt5 import uic
 
-form_class = uic.loadUiType("id_pw_main_ui.ui")[0]
-# form_class_2 = uic.loadUiType("id_pw_dialog.ui")[0]
+form_class = uic.loadUiType("main_ui.ui")[0]
+# form_class_2 = uic.loadUiType("dialog.ui")[0]
 form_class_2 = uic.loadUiType("dialog_2.ui")[0]
 
-load_windows_ui = "id_pw_main_ui.ui"
-load_dialog_ui = "id_pw_dialog.ui"
+load_windows_ui = "main_ui.ui"
+load_dialog_ui = "dialog.ui"
 
 class LoginPage(QDialog, form_class_2):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        # loadUi('id_pw_dialog.ui', self)
+        # loadUi('dialog.ui', self)
 
 class RegisterPage(QDialog):
     def __init__(self):
         super(RegisterPage, self).__init__()
-        loadUi('id_pw_dialog.ui', self)
+        loadUi('dialog.ui', self)
 
 class HomePage(QMainWindow, form_class):
     def __init__(self):

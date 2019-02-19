@@ -98,7 +98,7 @@ def deleteTable(_no):
     conn.commit()
 
 
-form_class = uic.loadUiType("id_pw_main_ui.ui")[0]
+form_class = uic.loadUiType("main_ui.ui")[0]
 
 
 class MyWindow(QMainWindow, form_class):

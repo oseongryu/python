@@ -25,7 +25,7 @@ class MainWindow(QMainWindow):
         central_widget.setLayout(grid_layout)  # Set the layout into the central widget
         grid_layout.addWidget(QLabel("Application, which can minimize to Tray", self), 0, 0)
 
-        # Add a checkbox, which will depend on the behavior of the program when the window is closed
+        # Add a checkbox, which will depend on the behavior of the c_stock_program when the window is closed
         self.check_box = QCheckBox('Minimize to Tray')
         grid_layout.addWidget(self.check_box, 1, 0)
         grid_layout.addItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Expanding), 2, 0)

@@ -4,7 +4,7 @@
 """
 ZetCode PyQt5 tutorial
 
-This program creates a menubar. The
+This c_stock_program creates a menubar. The
 menubar has one menu with an exit action.
 
 Author: Jan Bodnar
