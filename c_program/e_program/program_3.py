@@ -108,7 +108,7 @@ class MyWindow(QMainWindow, form_class):
         except Exception as e:
             print(e)
             print(type(e))
-            self.statusbar.showMessage("[Error] " + str(type(e)))
+            self.statusbar.showMessage("[Error] "+str(e)+", " + str(type(e)))
             return
 
     def click_button_start(self):
@@ -122,14 +122,7 @@ class MyWindow(QMainWindow, form_class):
             line_edit_id = self.lineEdit_2.text()
             line_edit_pw = self.lineEdit_3.text()
             line_edit_login_button = self.lineEdit_4.text()
-        except Exception as e:
-            print(e)
-            print(type(e))
-            self.statusbar.showMessage("[Error] " + str(type(e)))
-            return
 
-
-        try:
             #  사이트주소, 아이디, 패스워드, 로그인버튼 위치값 여부 확인
             if(line_edit_url== ""):
                 self.statusbar.showMessage('사이트 주소가 비었음')
@@ -158,36 +151,22 @@ class MyWindow(QMainWindow, form_class):
                 options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
 
             driver = webdriver.Chrome('chromedriver.exe', chrome_options=options)
-        except Exception as e:
-            print(e)
-            print(type(e))
-            self.statusbar.showMessage("[Error] 크롬드라이버 경로를 잘못 입력하였습니다." + str(type(e)))
-            return
 
-        try:
+
             # 3초 대기하기
             driver.implicitly_wait(3)
 
             # url 읽어들이기
             driver.get(line_edit_url)
 
-        except Exception as e:
-            print(e)
-            print(type(e))
-            self.statusbar.showMessage("[Error] 사이트주소경로를 잘못 입력하였습니다." + str(type(e)))
-            return
 
-        try:
+
+
             # 디렉토리가 없을 경우 디렉토리 생성
             dirname = './screenshot'
             if not os.path.isdir(dirname):
                 os.mkdir(dirname)
-        except Exception as e:
-            print(e)
-            print(type(e))
-            self.statusbar.showMessage("[Error] 디렉토리 생성을 잘못하였습니다." + str(type(e)))
-            return
-        try:
+
             rows = selectTableList()
             # print(rows)
             id  = ''
@@ -203,6 +182,7 @@ class MyWindow(QMainWindow, form_class):
                 if item is not None:
                     id = item.text()
                     # self.lineEdit.setText(txt)
+
                 else:
                     txt = "no data"
 
@@ -213,6 +193,7 @@ class MyWindow(QMainWindow, form_class):
                     # self.lineEdit_2.setText(txt)
                 else:
                     txt = "no data"
+
 
 
                 # 시작전 스크린샷이 True일 경우 수행
@@ -265,6 +246,7 @@ class MyWindow(QMainWindow, form_class):
 
                 number = self.tableWidget.currentRow() + 1
                 self.tableWidget.selectRow(number)
+
         except Exception as e:
             print(e)
             print(type(e))
@@ -285,7 +267,7 @@ class MyWindow(QMainWindow, form_class):
         except Exception as e:
             print(e)
             print(type(e))
-            self.statusbar.showMessage("[Error] 경고창이 존재하지 않습니다." + str(type(e)))
+            self.statusbar.showMessage("[Error] " + str(e) + ", " + str(type(e)))
             return
 
     def loadFile(self):
@@ -325,7 +307,7 @@ class MyWindow(QMainWindow, form_class):
         except Exception as e:
             print(e)
             print(type(e))
-            self.statusbar.showMessage("[Error] csv 파일을 읽어오는데 실패했습니다." + str(type(e)))
+            self.statusbar.showMessage("[Error] " + str(e) + ", " + str(type(e)))
             return
 
 
