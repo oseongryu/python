@@ -70,46 +70,11 @@ class MyWindow(QMainWindow, form_class):
         self.checkBox_5.setChecked(True)
         self.checkBox_6.setChecked(True)
 
-
-        # 테이블에 클릭 이벤트주기
-        self.tableWidget.itemClicked.connect(self.btn_table_clicked)
-
-        # self.tableWidget.itemSelectionChanged.connect((self.btn_table_changed))
-
         # 테이블 수정 불가능하게 변경
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)  # row 단위로 선택 가능
 
         self.lineEdit_5.setDisabled(1)
-
-    # 테이블 클릭
-    def btn_table_clicked(self):
-        try:
-            tw_si = self.tableWidget.selectedIndexes()
-
-            for idx in tw_si:
-                pass
-            # row의 0번째
-            item = self.tableWidget.item(idx.row(), 0)
-            if item is not None:
-                txt = item.text()
-                # self.lineEdit.setText(txt)
-            else:
-                txt = "no data"
-
-            # row의 1번째
-            item = self.tableWidget.item(idx.row(), 1)
-            if item is not None:
-                txt = item.text()
-                # self.lineEdit_2.setText(txt)
-            else:
-                txt = "no data"
-
-        except Exception as e:
-            print(e)
-            print(type(e))
-            self.statusbar.showMessage("[Error] "+str(e)+", " + str(type(e)))
-            return
 
     def click_button_start(self):
         try:
@@ -171,34 +136,16 @@ class MyWindow(QMainWindow, form_class):
             # print(rows)
             id  = ''
             pw  = ''
-            for row in rows:
-                tw_si = self.tableWidget.selectedIndexes()
-
-                for idx in tw_si:
-                    pass
-
-                # row의 0번째 no
-                item = self.tableWidget.item(idx.row(), 0)
-                if item is not None:
-                    id = item.text()
-                    # self.lineEdit.setText(txt)
-
-                else:
-                    txt = "no data"
-
-                # row의 1번째 name
-                item = self.tableWidget.item(idx.row(), 1)
-                if item is not None:
-                    pw = item.text()
-                    # self.lineEdit_2.setText(txt)
-                else:
-                    txt = "no data"
-
-
+            index = ''
+            alert_message = ''
+            for idx, row in enumerate(rows, 1):
+                id = row[0]
+                pw = row[1]
+                index = str(idx)
 
                 # 시작전 스크린샷이 True일 경우 수행
                 if(self.checkBox_5.isChecked()):
-                    driver.save_screenshot("./screenshot/"+id+"_"+pw+"_1(before).png")
+                    driver.save_screenshot("./screenshot/"+index+"_1_"+id+"_"+pw+"(before).png")
 
 
 
@@ -225,7 +172,7 @@ class MyWindow(QMainWindow, form_class):
 
                 # 아이디비번입력후 스크린샷 찍을 경우 수행
                 if(self.checkBox_6.isChecked()):
-                    driver.save_screenshot("./screenshot/"+id+"_"+pw+"_2(after).png")
+                    driver.save_screenshot("./screenshot/" + index + "_2_" + id + "_" + pw + "(after).png")
 
 
                 if(combo_box_login_button == "id"):
@@ -240,13 +187,15 @@ class MyWindow(QMainWindow, form_class):
                 if(self.checkBox_2.isChecked()):
                     WebDriverWait(driver, 3).until(EC.alert_is_present(),'Timed out waiting for PA creation confirmation popup to appear.')
                     alert = driver.switch_to.alert
-                    print(alert.text)
+                    alert_message = alert.text
+                    # print(alert.text)
                     alert.accept()
+
                     # print("alert accepted")
+                now = time.localtime()
+                print(index + ' ' + '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec) + ' ' + id  +' '+ pw +' ' + alert_message)
 
-                number = self.tableWidget.currentRow() + 1
-                self.tableWidget.selectRow(number)
-
+                print( )
         except Exception as e:
             print(e)
             print(type(e))
