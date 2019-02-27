@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 import os
 import sys
 from PyQt5.QtWidgets import *
@@ -12,8 +13,10 @@ from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import csv
+from logging import handlers
+import logging
 
-conn = sqlite3.connect("sqlitedb.db")
+conn = sqlite3.connect("./lib/sqlitedb.db")
 
 cur = conn.cursor()
 cur.execute('DROP TABLE IF EXISTS stocks')
@@ -28,7 +31,21 @@ CREATE TABLE stocks
 conn.commit()
 
 
-form_class = uic.loadUiType("radiobutton.ui")[0]
+form_class = uic.loadUiType("./lib/radiobutton.ui")[0]
+
+
+#log settings
+programLogFormatter = logging.Formatter('%(asctime)s,%(message)s')
+
+#handler settings
+programLogHandler = handlers.TimedRotatingFileHandler(filename='program_log.log', when='midnight', interval=1, encoding='utf-8')
+programLogHandler.setFormatter(programLogFormatter)
+programLogHandler.suffix = "%Y%m%d"
+
+#logger set
+programLogger = logging.getLogger()
+programLogger.setLevel(logging.INFO)
+programLogger.addHandler(programLogHandler)
 
 # table 리스트
 def selectTableList():
@@ -75,6 +92,7 @@ class MyWindow(QMainWindow, form_class):
         self.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)  # row 단위로 선택 가능
 
         self.lineEdit_5.setDisabled(1)
+        self.lineEdit_6.setText('0')
 
     def click_button_start(self):
         try:
@@ -87,7 +105,8 @@ class MyWindow(QMainWindow, form_class):
             line_edit_id = self.lineEdit_2.text()
             line_edit_pw = self.lineEdit_3.text()
             line_edit_login_button = self.lineEdit_4.text()
-
+            line_edit_refresh_time = int(self.lineEdit_6.text())
+            line_edit_site_name = self.lineEdit_7.text()
             #  사이트주소, 아이디, 패스워드, 로그인버튼 위치값 여부 확인
             if(line_edit_url== ""):
                 self.statusbar.showMessage('사이트 주소가 비었음')
@@ -100,6 +119,9 @@ class MyWindow(QMainWindow, form_class):
                 return
             if(line_edit_login_button== ""):
                 self.statusbar.showMessage('로그인버튼경로가 비었음')
+                return
+            if(line_edit_site_name== ""):
+                self.statusbar.showMessage('사이트이름이 비었음')
                 return
             else :
                 self.statusbar.showMessage('')
@@ -115,7 +137,7 @@ class MyWindow(QMainWindow, form_class):
                 # UserAgent값 변경
                 options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
 
-            driver = webdriver.Chrome('chromedriver.exe', chrome_options=options)
+            driver = webdriver.Chrome('./lib/chromedriver.exe', chrome_options=options)
 
 
             # 3초 대기하기
@@ -128,7 +150,7 @@ class MyWindow(QMainWindow, form_class):
 
 
             # 디렉토리가 없을 경우 디렉토리 생성
-            dirname = './screenshot'
+            dirname = './screenshot/'+line_edit_site_name
             if not os.path.isdir(dirname):
                 os.mkdir(dirname)
 
@@ -139,13 +161,15 @@ class MyWindow(QMainWindow, form_class):
             index = ''
             alert_message = ''
             for idx, row in enumerate(rows, 1):
+
+                time.sleep(line_edit_refresh_time)
                 id = row[0]
                 pw = row[1]
                 index = str(idx)
 
                 # 시작전 스크린샷이 True일 경우 수행
                 if(self.checkBox_5.isChecked()):
-                    driver.save_screenshot("./screenshot/"+index+"_1_"+id+"_"+pw+"(before).png")
+                    driver.save_screenshot("./screenshot/"+line_edit_site_name+"/"+index+"_1_"+id+"_"+pw+"_before.png")
 
 
 
@@ -172,7 +196,7 @@ class MyWindow(QMainWindow, form_class):
 
                 # 아이디비번입력후 스크린샷 찍을 경우 수행
                 if(self.checkBox_6.isChecked()):
-                    driver.save_screenshot("./screenshot/" + index + "_2_" + id + "_" + pw + "(after).png")
+                    driver.save_screenshot("./screenshot/"+ line_edit_site_name+"/" + index + "_2_" + id + "_" + pw + "_after.png")
 
 
                 if(combo_box_login_button == "id"):
@@ -192,14 +216,17 @@ class MyWindow(QMainWindow, form_class):
                     alert.accept()
 
                     # print("alert accepted")
-                now = time.localtime()
-                print(index + ' ' + '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec) + ' ' + id  +' '+ pw +' ' + alert_message)
 
-                print( )
+                # print(index +' ' + id  +' '+ pw +' ' + alert_message)
+
+                # use logger
+                programLogger.info(index +' ' + id  +' '+ pw +' ' + alert_message)
+
         except Exception as e:
             print(e)
             print(type(e))
             self.statusbar.showMessage("[Error] "+str(e)+", " + str(type(e)))
+            programLogger.info(str(e)+str(type(e)))
             return
 
     def openFileNameDialog(self):
@@ -217,12 +244,13 @@ class MyWindow(QMainWindow, form_class):
             print(e)
             print(type(e))
             self.statusbar.showMessage("[Error] " + str(e) + ", " + str(type(e)))
+            programLogger.info(str(e) + str(type(e)))
             return
 
     def loadFile(self):
         try:
             line_edit_csv_file_dir = self.lineEdit_5.text().replace(r"\\",r"\\")
-            f = open(line_edit_csv_file_dir, 'r')  # open the csv data file
+            f = open(line_edit_csv_file_dir, 'r',encoding='euc-kr')  # open the csv data file
             # next(f, None) # skip the header row
             reader = csv.reader(f)
             for row in reader:
@@ -257,6 +285,7 @@ class MyWindow(QMainWindow, form_class):
             print(e)
             print(type(e))
             self.statusbar.showMessage("[Error] " + str(e) + ", " + str(type(e)))
+            programLogger.info(str(e) + str(type(e)))
             return
 
 
