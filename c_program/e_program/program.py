@@ -3,9 +3,7 @@ import os
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
-import pymysql
 import sqlite3
-import pyperclip
 from PIL import ImageGrab
 from selenium import webdriver
 import time
@@ -31,7 +29,7 @@ CREATE TABLE stocks
 conn.commit()
 
 
-form_class = uic.loadUiType("./lib/radiobutton.ui")[0]
+form_class = uic.loadUiType("./lib/main.ui")[0]
 
 
 #log settings
@@ -193,7 +191,7 @@ class MyWindow(QMainWindow, form_class):
                     driver.find_element_by_xpath(line_edit_pw).clear()
                     driver.find_element_by_xpath(line_edit_pw).send_keys(pw)
 
-
+                programLogger.info(index + ' ' + id + ' ' + pw + ' 로그인 진행 전.. ')
                 # 아이디비번입력후 스크린샷 찍을 경우 수행
                 if(self.checkBox_6.isChecked()):
                     driver.save_screenshot("./screenshot/"+ line_edit_site_name+"/" + index + "_2_" + id + "_" + pw + "_after.png")
@@ -209,7 +207,7 @@ class MyWindow(QMainWindow, form_class):
 
                 #경고창 체크박스가 True일 경우 수행
                 if(self.checkBox_2.isChecked()):
-                    WebDriverWait(driver, 3).until(EC.alert_is_present(),'Timed out waiting for PA creation confirmation popup to appear.')
+                    WebDriverWait(driver, 3).until(EC.alert_is_present(),'경고창이 없거나 로그인에 성공하였습니다.')
                     alert = driver.switch_to.alert
                     alert_message = alert.text
                     # print(alert.text)
@@ -295,6 +293,3 @@ if __name__ == "__main__":
     myWindow = MyWindow()
     myWindow.show()
     app.exec_()
-
-
-
