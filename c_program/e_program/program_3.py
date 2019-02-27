@@ -188,73 +188,73 @@ class MyWindow(QMainWindow, form_class):
             self.statusbar.showMessage("[Error] 디렉토리 생성을 잘못하였습니다." + str(type(e)))
             return
 
-        try:
+        rows = selectTableList()
+        print(rows)
+        id  = ''
+        pw  = ''
+        for row in rows:
+            tw_si = self.tableWidget.selectedIndexes()
+
+            for idx in tw_si:
+                pass
+
+            # row의 0번째 no
+            item = self.tableWidget.item(idx.row(), 0)
+            if item is not None:
+                id = item.text()
+                # self.lineEdit.setText(txt)
+            else:
+                txt = "no data"
+
+            # row의 1번째 name
+            item = self.tableWidget.item(idx.row(), 1)
+            if item is not None:
+                pw = item.text()
+                # self.lineEdit_2.setText(txt)
+            else:
+                txt = "no data"
+
+
             # 시작전 스크린샷이 True일 경우 수행
             if(self.checkBox_5.isChecked()):
-                driver.save_screenshot("./screenshot/"+"aaaa" +"_"+"bbbb"+"_1(before).png")
-        except Exception as e:
-            print(e)
-            print(type(e))
-            self.statusbar.showMessage("[Error] " + str(type(e)))
-            return
+                driver.save_screenshot("./screenshot/"+id+"_"+pw+"_1(before).png")
 
-        try:
+
+
             if(combo_box_id == "id"):
                 driver.find_element_by_id(plain_text_edit_id).clear()
-                driver.find_element_by_id(plain_text_edit_id).send_keys("ididid")
+                driver.find_element_by_id(plain_text_edit_id).send_keys(id)
             elif(combo_box_id == "name"):
                 driver.find_element_by_name(plain_text_edit_id).clear()
-                driver.find_element_by_name(plain_text_edit_id).send_keys("ididid")
+                driver.find_element_by_name(plain_text_edit_id).send_keys(id)
             elif(combo_box_id == "xpath"):
                 driver.find_element_by_xpath(plain_text_edit_id).clear()
-                driver.find_element_by_xpath(plain_text_edit_id).send_keys("ididid")
-        except Exception as e:
-            print(e)
-            print(type(e))
-            self.statusbar.showMessage("[Error] 아이디경로를 잘못 입력하였습니다." + str(type(e)))
-            return
+                driver.find_element_by_xpath(plain_text_edit_id).send_keys(id)
 
-        try:
             if(combo_box_pw == "id"):
                 driver.find_element_by_id(plain_text_edit_pw).clear()
-                driver.find_element_by_id(plain_text_edit_pw).send_keys("ididid")
+                driver.find_element_by_id(plain_text_edit_pw).send_keys(pw)
             elif(combo_box_pw == "name"):
                 driver.find_element_by_name(plain_text_edit_pw).clear()
-                driver.find_element_by_name(plain_text_edit_pw).send_keys("ididid")
+                driver.find_element_by_name(plain_text_edit_pw).send_keys(pw)
             elif(combo_box_pw == "xpath"):
                 driver.find_element_by_xpath(plain_text_edit_pw).clear()
-                driver.find_element_by_xpath(plain_text_edit_pw).send_keys("ididid")
+                driver.find_element_by_xpath(plain_text_edit_pw).send_keys(pw)
 
-        except Exception as e:
-            print(e)
-            print(type(e))
-            self.statusbar.showMessage("[Error] 패스워드경로를 잘못 입력하였습니다." + str(type(e)))
-            return
 
-        try:
             # 아이디비번입력후 스크린샷 찍을 경우 수행
             if(self.checkBox_6.isChecked()):
-                driver.save_screenshot("./screenshot/"+"aaaa" +"_"+"bbbb"+"_2(after).png")
-        except Exception as e:
-            print(e)
-            print(type(e))
-            self.statusbar.showMessage("[Error] " + str(type(e)))
-            return
+                driver.save_screenshot("./screenshot/"+id+"_"+pw+"_2(after).png")
 
-        try:
+
             if(combo_box_login_button == "id"):
                 driver.find_element_by_id(plain_text_edit_login_button).click()
             elif(combo_box_login_button == "name"):
                 driver.find_element_by_name(plain_text_edit_login_button).click()
             elif(combo_box_login_button == "xpath"):
                 driver.find_element_by_xpath(plain_text_edit_login_button).click()
-        except Exception as e:
-            print(e)
-            print(type(e))
-            self.statusbar.showMessage("[Error] 로그인버튼경로를 잘못 입력하였습니다." + str(type(e)))
-            return
 
-        try:
+
             #경고창 체크박스가 True일 경우 수행
             if(self.checkBox_2.isChecked()):
                 WebDriverWait(driver, 3).until(EC.alert_is_present(),'Timed out waiting for PA creation confirmation popup to appear.')
@@ -262,11 +262,10 @@ class MyWindow(QMainWindow, form_class):
                 print(alert.text)
                 alert.accept()
                 # print("alert accepted")
-        except Exception as e:
-            print(e)
-            print(type(e))
-            self.statusbar.showMessage("[Error] 경고창이 존재하지 않습니다." + str(type(e)))
-            return
+
+            number = self.tableWidget.currentRow() + 1
+            self.tableWidget.selectRow(number)
+
 
     def openFileNameDialog(self):
         try:
