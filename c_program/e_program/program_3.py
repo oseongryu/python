@@ -28,7 +28,7 @@ CREATE TABLE stocks
 conn.commit()
 
 
-form_class = uic.loadUiType("radiobuttion.ui")[0]
+form_class = uic.loadUiType("radiobutton.ui")[0]
 
 # table 리스트
 def selectTableList():
@@ -80,7 +80,7 @@ class MyWindow(QMainWindow, form_class):
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)  # row 단위로 선택 가능
 
-        self.plainTextEdit_5.setDisabled(1)
+        self.lineEdit_5.setDisabled(1)
 
     # 테이블 클릭
     def btn_table_clicked(self):
@@ -118,10 +118,10 @@ class MyWindow(QMainWindow, form_class):
             combo_box_pw = self.comboBox_2.currentText()
             combo_box_login_button = self.comboBox_3.currentText()
 
-            plain_text_edit_url = self.plainTextEdit.toPlainText()
-            plain_text_edit_id = self.plainTextEdit_2.toPlainText()
-            plain_text_edit_pw = self.plainTextEdit_3.toPlainText()
-            plain_text_edit_login_button = self.plainTextEdit_4.toPlainText()
+            line_edit_url = self.lineEdit.text()
+            line_edit_id = self.lineEdit_2.text()
+            line_edit_pw = self.lineEdit_3.text()
+            line_edit_login_button = self.lineEdit_4.text()
         except Exception as e:
             print(e)
             print(type(e))
@@ -131,16 +131,16 @@ class MyWindow(QMainWindow, form_class):
 
         try:
             #  사이트주소, 아이디, 패스워드, 로그인버튼 위치값 여부 확인
-            if(plain_text_edit_url== ""):
+            if(line_edit_url== ""):
                 self.statusbar.showMessage('사이트 주소가 비었음')
                 return
-            if(plain_text_edit_id== ""):
+            if(line_edit_id== ""):
                 self.statusbar.showMessage('아이디경로가 비었음')
                 return
-            if(plain_text_edit_pw== ""):
+            if(line_edit_pw== ""):
                 self.statusbar.showMessage('패스워드경로가 비었음')
                 return
-            if(plain_text_edit_login_button== ""):
+            if(line_edit_login_button== ""):
                 self.statusbar.showMessage('로그인버튼경로가 비었음')
                 return
             else :
@@ -169,7 +169,7 @@ class MyWindow(QMainWindow, form_class):
             driver.implicitly_wait(3)
 
             # url 읽어들이기
-            driver.get(plain_text_edit_url)
+            driver.get(line_edit_url)
 
         except Exception as e:
             print(e)
@@ -187,85 +187,89 @@ class MyWindow(QMainWindow, form_class):
             print(type(e))
             self.statusbar.showMessage("[Error] 디렉토리 생성을 잘못하였습니다." + str(type(e)))
             return
+        try:
+            rows = selectTableList()
+            # print(rows)
+            id  = ''
+            pw  = ''
+            for row in rows:
+                tw_si = self.tableWidget.selectedIndexes()
 
-        rows = selectTableList()
-        print(rows)
-        id  = ''
-        pw  = ''
-        for row in rows:
-            tw_si = self.tableWidget.selectedIndexes()
+                for idx in tw_si:
+                    pass
 
-            for idx in tw_si:
-                pass
+                # row의 0번째 no
+                item = self.tableWidget.item(idx.row(), 0)
+                if item is not None:
+                    id = item.text()
+                    # self.lineEdit.setText(txt)
+                else:
+                    txt = "no data"
 
-            # row의 0번째 no
-            item = self.tableWidget.item(idx.row(), 0)
-            if item is not None:
-                id = item.text()
-                # self.lineEdit.setText(txt)
-            else:
-                txt = "no data"
-
-            # row의 1번째 name
-            item = self.tableWidget.item(idx.row(), 1)
-            if item is not None:
-                pw = item.text()
-                # self.lineEdit_2.setText(txt)
-            else:
-                txt = "no data"
-
-
-            # 시작전 스크린샷이 True일 경우 수행
-            if(self.checkBox_5.isChecked()):
-                driver.save_screenshot("./screenshot/"+id+"_"+pw+"_1(before).png")
+                # row의 1번째 name
+                item = self.tableWidget.item(idx.row(), 1)
+                if item is not None:
+                    pw = item.text()
+                    # self.lineEdit_2.setText(txt)
+                else:
+                    txt = "no data"
 
 
-
-            if(combo_box_id == "id"):
-                driver.find_element_by_id(plain_text_edit_id).clear()
-                driver.find_element_by_id(plain_text_edit_id).send_keys(id)
-            elif(combo_box_id == "name"):
-                driver.find_element_by_name(plain_text_edit_id).clear()
-                driver.find_element_by_name(plain_text_edit_id).send_keys(id)
-            elif(combo_box_id == "xpath"):
-                driver.find_element_by_xpath(plain_text_edit_id).clear()
-                driver.find_element_by_xpath(plain_text_edit_id).send_keys(id)
-
-            if(combo_box_pw == "id"):
-                driver.find_element_by_id(plain_text_edit_pw).clear()
-                driver.find_element_by_id(plain_text_edit_pw).send_keys(pw)
-            elif(combo_box_pw == "name"):
-                driver.find_element_by_name(plain_text_edit_pw).clear()
-                driver.find_element_by_name(plain_text_edit_pw).send_keys(pw)
-            elif(combo_box_pw == "xpath"):
-                driver.find_element_by_xpath(plain_text_edit_pw).clear()
-                driver.find_element_by_xpath(plain_text_edit_pw).send_keys(pw)
+                # 시작전 스크린샷이 True일 경우 수행
+                if(self.checkBox_5.isChecked()):
+                    driver.save_screenshot("./screenshot/"+id+"_"+pw+"_1(before).png")
 
 
-            # 아이디비번입력후 스크린샷 찍을 경우 수행
-            if(self.checkBox_6.isChecked()):
-                driver.save_screenshot("./screenshot/"+id+"_"+pw+"_2(after).png")
+
+                if(combo_box_id == "id"):
+                    driver.find_element_by_id(line_edit_id).clear()
+                    driver.find_element_by_id(line_edit_id).send_keys(id)
+                elif(combo_box_id == "name"):
+                    driver.find_element_by_name(line_edit_id).clear()
+                    driver.find_element_by_name(line_edit_id).send_keys(id)
+                elif(combo_box_id == "xpath"):
+                    driver.find_element_by_xpath(line_edit_id).clear()
+                    driver.find_element_by_xpath(line_edit_id).send_keys(id)
+
+                if(combo_box_pw == "id"):
+                    driver.find_element_by_id(line_edit_pw).clear()
+                    driver.find_element_by_id(line_edit_pw).send_keys(pw)
+                elif(combo_box_pw == "name"):
+                    driver.find_element_by_name(line_edit_pw).clear()
+                    driver.find_element_by_name(line_edit_pw).send_keys(pw)
+                elif(combo_box_pw == "xpath"):
+                    driver.find_element_by_xpath(line_edit_pw).clear()
+                    driver.find_element_by_xpath(line_edit_pw).send_keys(pw)
 
 
-            if(combo_box_login_button == "id"):
-                driver.find_element_by_id(plain_text_edit_login_button).click()
-            elif(combo_box_login_button == "name"):
-                driver.find_element_by_name(plain_text_edit_login_button).click()
-            elif(combo_box_login_button == "xpath"):
-                driver.find_element_by_xpath(plain_text_edit_login_button).click()
+                # 아이디비번입력후 스크린샷 찍을 경우 수행
+                if(self.checkBox_6.isChecked()):
+                    driver.save_screenshot("./screenshot/"+id+"_"+pw+"_2(after).png")
 
 
-            #경고창 체크박스가 True일 경우 수행
-            if(self.checkBox_2.isChecked()):
-                WebDriverWait(driver, 3).until(EC.alert_is_present(),'Timed out waiting for PA creation confirmation popup to appear.')
-                alert = driver.switch_to.alert
-                print(alert.text)
-                alert.accept()
-                # print("alert accepted")
+                if(combo_box_login_button == "id"):
+                    driver.find_element_by_id(line_edit_login_button).click()
+                elif(combo_box_login_button == "name"):
+                    driver.find_element_by_name(line_edit_login_button).click()
+                elif(combo_box_login_button == "xpath"):
+                    driver.find_element_by_xpath(line_edit_login_button).click()
 
-            number = self.tableWidget.currentRow() + 1
-            self.tableWidget.selectRow(number)
 
+                #경고창 체크박스가 True일 경우 수행
+                if(self.checkBox_2.isChecked()):
+                    WebDriverWait(driver, 3).until(EC.alert_is_present(),'Timed out waiting for PA creation confirmation popup to appear.')
+                    alert = driver.switch_to.alert
+                    print(alert.text)
+                    alert.accept()
+                    # print("alert accepted")
+
+                number = self.tableWidget.currentRow() + 1
+                self.tableWidget.selectRow(number)
+        except Exception as e:
+            print(e)
+            print(type(e))
+            self.statusbar.showMessage("[Error] "+str(e)+", " + str(type(e)))
+            return
 
     def openFileNameDialog(self):
         try:
@@ -276,8 +280,8 @@ class MyWindow(QMainWindow, form_class):
 
             if fileName:
                 print(fileName)
-                self.plainTextEdit_5.clear()
-                self.plainTextEdit_5.insertPlainText(fileName)
+                self.lineEdit_5.clear()
+                self.lineEdit_5.setText(fileName)
         except Exception as e:
             print(e)
             print(type(e))
@@ -286,16 +290,16 @@ class MyWindow(QMainWindow, form_class):
 
     def loadFile(self):
         try:
-            plain_text_edit_csv_file_dir = self.plainTextEdit_5.toPlainText().replace(r"\\",r"\\")
-            f = open(plain_text_edit_csv_file_dir, 'r')  # open the csv data file
+            line_edit_csv_file_dir = self.lineEdit_5.text().replace(r"\\",r"\\")
+            f = open(line_edit_csv_file_dir, 'r')  # open the csv data file
             # next(f, None) # skip the header row
             reader = csv.reader(f)
             for row in reader:
                 cur.execute('INSERT INTO  stocks VALUES (?,?)', row)
             conn.commit()
 
-            for row in cur.execute("SELECT * FROM stocks"):
-                print(row)
+            # for row in cur.execute("SELECT * FROM stocks"):
+            #     print(row)
             f.close()
 
             # conn.close()
