@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import *
 from PyQt5 import uic
 import pymysql
 import sqlite3
-import pyperclip
 from PIL import ImageGrab
 
 
