@@ -55,6 +55,14 @@ def selectTableList():
 
     return rows
 
+#  Delete table list
+def deleteTableList():
+    cur = conn.cursor()
+    sql = "DELETE FROM stocks"
+    cur.execute(sql)
+    conn.commit()
+
+
 class MyWindow(QMainWindow, form_class):
     def __init__(self):
         super().__init__()
@@ -251,6 +259,9 @@ class MyWindow(QMainWindow, form_class):
             f = open(line_edit_csv_file_dir, 'r',encoding='euc-kr')  # open the csv data file
             # next(f, None) # skip the header row
             reader = csv.reader(f)
+            
+            # 추가 전에 데이터 전체 삭제
+            deleteTableList()
             for row in reader:
                 cur.execute('INSERT INTO  stocks VALUES (?,?)', row)
             conn.commit()
@@ -260,8 +271,8 @@ class MyWindow(QMainWindow, form_class):
             f.close()
 
             # conn.close()
-            self.pushButton_3.setDisabled(1)
-            self.pushButton_4.setDisabled(1)
+            # self.pushButton_3.setDisabled(1)
+            # self.pushButton_4.setDisabled(1)
 
 
             # 조회
