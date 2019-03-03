@@ -30,6 +30,7 @@ conn.commit()
 
 
 form_class = uic.loadUiType("./lib/main.ui")[0]
+form_class_2 = uic.loadUiType("./lib/dialog.ui")[0]
 
 
 #log settings
@@ -63,6 +64,11 @@ def deleteTableList():
     conn.commit()
 
 
+class LoginDialog(QDialog, form_class_2):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+
 class MyWindow(QMainWindow, form_class):
     def __init__(self):
         super().__init__()
@@ -87,6 +93,8 @@ class MyWindow(QMainWindow, form_class):
         self.pushButton_3.clicked.connect(self.openFileNameDialog)
         self.pushButton_4.clicked.connect(self.loadFile)
 
+        # popup Dialog
+        self.pushButton_5.clicked.connect(self.executeLoginDialog)
 
         # self.checkBox.setChecked(True)
         # self.checkBox_2.setChecked(True)
@@ -297,7 +305,16 @@ class MyWindow(QMainWindow, form_class):
             programLogger.info(str(e) + str(type(e)))
             return
 
+    # Dialog result test
+    def executeLoginDialog(self):
+        dialog = LoginDialog()
+        result = dialog.exec_()
 
+        #  성공
+        if(result == 1 ):
+            print('Ok')
+        else:
+            print('Cancel')
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
