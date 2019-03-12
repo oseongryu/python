@@ -23,14 +23,71 @@ form_class_3 = uic.loadUiType("./lib/english_dialog.ui")[0]
 
 tab_list = []
 
+class App(QDialog):
+    def __init__(self):
+        super().__init__()
+        groupbox1 = QGroupBox("Grid")
+        # layout = QGridLayout()
+        # layout.setColumnStretch(0, 1)
+        # layout.setColumnStretch(1, 3)
+        # layout.setColumnStretch(2, 3)
+        # layout.addWidget(QPushButton('1'), 0, 0)
+        # layout.addWidget(QPushButton('2'), 0, 1)
+        # layout.addWidget(QPushButton('3'), 0, 2)
+        # layout.addWidget(QPushButton('3'), 0, 3)
+        #
+        # layout.addWidget(QPushButton('4'), 1, 0)
+        # layout.addWidget(QPushButton('5'), 1, 1)
+        # layout.addWidget(QPushButton('6'), 1, 2)
+        # layout.addWidget(QPushButton('7'), 2, 0)
+        # layout.addWidget(QPushButton('8'), 2, 1)
+        # layout.addWidget(QPushButton('9'), 2, 2)
+        # groupbox1.setLayout(layout)
+
+        groupbox2 = QGroupBox("Grid2")
+        # layout2 = QGridLayout()
+        # layout2.setColumnStretch(0, 1)
+        # layout2.setColumnStretch(1, 3)
+        # layout2.setColumnStretch(2, 3)
+        # layout2.addWidget(QPushButton('1'), 0, 0)
+        # layout2.addWidget(QPushButton('2'), 0, 1)
+        # layout2.addWidget(QPushButton('3'), 0, 2)
+        # layout2.addWidget(QPushButton('3'), 0, 3)
+        # layout2.addWidget(QPushButton('4'), 1, 0)
+        # layout2.addWidget(QPushButton('5'), 1, 1)
+        # layout2.addWidget(QPushButton('6'), 1, 2)
+        # layout2.addWidget(QPushButton('7'), 2, 0)
+        # layout2.addWidget(QPushButton('8'), 2, 1)
+        # layout2.addWidget(QPushButton('9'), 2, 2)
+        # groupbox2.setLayout(layout2)
+
+        windowLayout = QVBoxLayout()
+        windowLayout = QHBoxLayout()
+
+        windowLayout.addWidget(groupbox1)
+
+        windowLayout.addWidget(groupbox2)
+
+        self.setLayout(windowLayout)
+
+
 
 class EnglishDialog(QDialog, form_class_3):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.pushButton.clicked.connect(self.translatorText)
+
+
+
+    def translatorText(self):
         translator = Translator()
-        print(translator.translate('안녕하세요', src='ko', dest='en').origin)
-        print(translator.translate('안녕하세요.', src='ko', dest='en').text)
+        origin_text = self.plainTextEdit.toPlainText()
+        # print(translator.translate(origin_text, src='ko', dest='en').origin)
+
+        tanslator_text = translator.translate(origin_text, src='ko', dest='en').text
+        self.plainTextEdit_2.clear()
+        self.plainTextEdit_2.insertPlainText(tanslator_text)
 
 class LoginDialog(QDialog, form_class_2):
     def __init__(self):
@@ -66,6 +123,11 @@ class MyWindow(QMainWindow, form_class):
         
         item = QTreeWidgetItem()
         item.setText(0, "영어다이어리")
+        item.setText(1, "EnglishDialog")
+        self.root.addChild(item)
+
+        item = QTreeWidgetItem()
+        item.setText(0, "레이아웃테스트")
         item.setText(1, "EnglishDialog")
         self.root.addChild(item)
 
@@ -111,6 +173,12 @@ class MyWindow(QMainWindow, form_class):
                 elif menu_name == "영어다이어리":
                     tab_list.append(menu_name)
                     index = self.tabWidget.addTab(EnglishDialog(), menu_name)
+                    self.tabWidget.setCurrentIndex(index)
+                    # print(self.tabWidget.tabText(index)+ str(index))
+                    print(self.tabWidget.count())
+                elif menu_name == "레이아웃테스트":
+                    tab_list.append(menu_name)
+                    index = self.tabWidget.addTab(App(), menu_name)
                     self.tabWidget.setCurrentIndex(index)
                     # print(self.tabWidget.tabText(index)+ str(index))
                     print(self.tabWidget.count())
