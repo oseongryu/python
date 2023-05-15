@@ -14,7 +14,6 @@ idna==2.6
 kiwisolver==1.0.1
 macholib==1.11
 matplotlib==2.2.2
-numpy==1.22.0
 pefile==2018.8.8
 Pillow==9.0.1
 psutil==5.6.6
