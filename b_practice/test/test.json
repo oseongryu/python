@@ -1,0 +1,12 @@
+{
+    "Olivia": {
+        "gender": "female",
+        "age": 25,
+        "hobby": ["reading", "music"]
+    },
+    "Tyler": {
+        "gender": "male",
+        "age": 30,
+        "hobby": ["development", "painting"]
+    }
+}
